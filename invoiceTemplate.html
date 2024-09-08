@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .invoice-container {
+            width: 100%;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 150px;
+            margin-bottom: 10px;
+        }
+
+        .details {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .details td {
+            vertical-align: top;
+            padding: 5px;
+        }
+
+        .items {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .items th,
+        .items td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        .total-row {
+            font-weight: bold;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="invoice-container">
+        <div class="header">
+            <img src="https://via.placeholder.com/150" alt="Company Logo" class="logo">
+            <h2 style="color: burlywood; font-weight: 500; font-size: large;">Tax Invoice/Bill of Supply/Cash Memo</h2>
+        </div>
+        <!-- Replace with your dynamic content -->
+        <table class="details">
+            <tr>
+                <td>
+                    <strong>Sold By :</strong><br />
+                    Varasiddhi Silk Exports<br />
+                    75, 3rd Cross, Lalbagh Road<br />
+                    BENGALURU, KARNATAKA, 560027<br />
+                    IN<br />
+                    PAN No: AACFV3325K<br />
+                    GST Registration No: 29AACFV3325K1ZY<br />
+                </td>
+                <td>
+                    <strong>Billing Address :</strong><br />
+                    Madhu B<br />
+                    Eurofins IT Solutions India Pvt Ltd., 1st Floor,<br />
+                    Maruti Platinum, AECS Layout, Bengaluru, Karnataka, 560037<br />
+                    State/UT Code: 29<br />
+                </td>
+            </tr>
+        </table>
+        <table class="items">
+            <thead>
+                <tr>
+                    <th>Sl. No</th>
+                    <th>Description</th>
+                    <th>Unit Price</th>
+                    <th>Qty</th>
+                    <th>Net Amount</th>
+                    <th>Tax Rate</th>
+                    <th>Tax Amount</th>
+                    <th>Total Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Repeat for each item -->
+                <tr>
+                    <td>1</td>
+                    <td>Varasiddhi Silks Men's Formal Shirt (SH-05-42, Navy Blue, 42)</td>
+                    <td>538.10</td>
+                    <td>1</td>
+                    <td>538.10</td>
+                    <td>2.5% CGST<br>2.5% SGST</td>
+                    <td>13.45<br>13.45</td>
+                    <td>565.00</td>
+                </tr>
+                <!-- Additional rows as needed -->
+            </tbody>
+        </table>
+        <div class="footer">
+            <p>Authorized Signatory</p>
+        </div>
+    </div>
+</body>
+
+</html>

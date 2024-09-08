@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice</title>
+    <style>
+        /* Include necessary CSS for styling invoice similar to the provided format */
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <div class="header">
+            <img src="public/images/logo.png" alt="Company Logo" width="100">
+            <h1>Tax Invoice/Bill of Supply/Cash Memo</h1>
+            <!-- Other header content -->
+        </div>
+        <div class="body">
+            <!-- Dynamic content using Handlebars syntax -->
+            <div class="seller-details">
+                <p>{{seller.name}}</p>
+                <p>{{seller.address}}</p>
+                <p>PAN No: {{seller.pan}}</p>
+                <p>GST Registration No: {{seller.gst}}</p>
+            </div>
+            <!-- Additional sections for billing, shipping, items, totals, etc. -->
+        </div>
+        <div class="footer">
+            <p>Authorized Signatory</p>
+            <img src="{{signatureImage}}" alt="Signature">
+        </div>
+    </div>
+</body>
+</html>
