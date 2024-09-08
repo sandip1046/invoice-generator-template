@@ -1,7 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const pdf = require('html-pdf');
+const puppeteer = require('puppeteer');
 const handlebars = require('handlebars');
 
 const app = express();
@@ -14,33 +14,38 @@ const templatePath = path.join(__dirname, 'invoiceTemplate.html');
 const source = fs.readFileSync(templatePath, 'utf8');
 const template = handlebars.compile(source);
 
-// Endpoint to generate and download PDF invoice
-app.post('/generate-invoice', (req, res) => {
+// Endpoint to generate PDF invoice
+app.post('/generate-invoice', async (req, res) => {
     const invoiceData = req.body; // Get invoice data from request body
 
     // Render HTML with dynamic data
     const htmlContent = template(invoiceData);
 
-    // Path where the PDF will be saved
-    const pdfPath = path.join(__dirname, 'invoice.pdf');
-
-    // Generate PDF from HTML and save to a file
-    pdf.create(htmlContent).toFile(pdfPath, (err, result) => {
-        if (err) {
-            res.status(500).send('Error generating PDF');
-            return;
-        }
-
-        // Send the generated PDF as a downloadable file
-        res.download(pdfPath, 'invoice.pdf', (downloadErr) => {
-            if (downloadErr) {
-                res.status(500).send('Error downloading PDF');
-            }
-
-            // Optionally, delete the file after download to save disk space
-            fs.unlinkSync(pdfPath);
+    try {
+        // Launch Puppeteer
+        const browser = await puppeteer.launch({
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
-    });
+        const page = await browser.newPage();
+
+        // Set the HTML content
+        await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+
+        // Generate PDF
+        const pdfBuffer = await page.pdf({ format: 'A4' });
+
+        // Close browser
+        await browser.close();
+
+        // Set response headers to download PDF
+        res.setHeader('Content-Disposition', 'attachment; filename=invoice.pdf');
+        res.setHeader('Content-Type', 'application/pdf');
+        res.status(200).send(pdfBuffer);
+    } catch (err) {
+        console.error('Error generating PDF:', err);
+        res.status(500).send('Error generating PDF');
+    }
 });
 
 app.listen(PORT, () => {
@@ -51,8 +56,8 @@ app.listen(PORT, () => {
 // const express = require('express');
 // const fs = require('fs');
 // const path = require('path');
-// const pdf = require('html-pdf');
-// const handlebars = require('handlebars');
+// const puppeteer = require('puppeteer'); // Import Puppeteer so that we can use it to generate PDF
+// const handlebars = require('handlebars'); // Import Handlebars so that we can use it to render HTML template
 
 // const app = express();
 // const PORT = 3000;
@@ -61,26 +66,40 @@ app.listen(PORT, () => {
 
 // // Load the HTML template
 // const templatePath = path.join(__dirname, 'invoiceTemplate.html');
-// const source = fs.readFileSync(templatePath, 'utf8');
-// const template = handlebars.compile(source);
+// const source = fs.readFileSync(templatePath, 'utf8');// Read the HTML template file synchronously
+// const template = handlebars.compile(source);// Compile the HTML template using Handlebars to create a template function
 
 // // Endpoint to generate PDF invoice
-// app.post('/generate-invoice', (req, res) => {
+// app.post('/generate-invoice', async (req, res) => {
 //     const invoiceData = req.body; // Get invoice data from request body
 
 //     // Render HTML with dynamic data
 //     const htmlContent = template(invoiceData);
 
-//     // Generate PDF from HTML
-//     pdf.create(htmlContent).toStream((err, stream) => {
-//         if (err) {
-//             res.status(500).send('Error generating PDF');
-//             return;
-//         }
+//     try {
+//         // Launch Puppeteer
+//         const browser = await puppeteer.launch({
+//             args: ['--no-sandbox', '--disable-setuid-sandbox'] // Required for running Puppeteer in Docker
+//         });
+//         const page = await browser.newPage();
+        
+//         // Set the HTML content
+//         await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+        
+//         // Generate PDF
+//         const pdfBuffer = await page.pdf({ format: 'A4' });
 
-//         res.setHeader('Content-type', 'application/pdf');
-//         stream.pipe(res);
-//     });
+//         // Close browser
+//         await browser.close();
+
+//         // Set response headers to download PDF
+//         res.setHeader('Content-Disposition', 'attachment; filename=invoice.pdf');
+//         res.setHeader('Content-Type', 'application/pdf');
+//         res.send(pdfBuffer);
+//     } catch (err) {
+//         console.error('Error generating PDF:', err);
+//         res.status(500).send('Error generating PDF');
+//     }
 // });
 
 // app.listen(PORT, () => {
